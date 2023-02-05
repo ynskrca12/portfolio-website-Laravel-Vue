@@ -32,7 +32,7 @@ const login = async() =>{
             <form @submit.prevent="login">
             <input type="email" placeholder="Enter your email" v-model="form.email">
             <br>
-            <input type="passsword" placeholder="Enter your password" v-model="form.password">
+            <input type="password" placeholder="Enter your password" v-model="form.password">
             <br>
             <input type="submit" value="Login" class="submit">
         </form>

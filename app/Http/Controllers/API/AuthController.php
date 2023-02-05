@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -15,19 +15,19 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email',
             'password' => 'required',
-            'c_passqord' => 'required|same:password'
+            'c_password' => 'required|same:password'
         ]);
 
-        if($validator->fails()){
+        if($validator->fails()) {
             $response = [
                 'success' => false,
                 'message' =>  $validator->errors()
             ];
-            return response()->json($response,400);
+            return response()->json($response, 400);
         }
 
         $input = $request->all();
-        $input['passsword'] = bcrypt($input['password']);
+        $input['password'] = bcrypt($input['password']);
         $user = User::create($input);
 
         $success['token'] = $user->createToken('MyApp')->plainTextToken;
@@ -43,19 +43,22 @@ class AuthController extends Controller
     }
 
     public function login(Request $request){
-        if(Auth::attempt(['email' => $request->email,'password' => $request->password]));
+        if(Auth::attempt(['email'=>$request->email,'password' => $request->password])) {
 
-        $user = $request->user();
-        $success['token'] = $user->createToken('MyApp')->plainTextToken;
-        $success['name'] = $user->name;
+            $user = $request->user();
+            $success['token'] = $user->createToken('MyApp')->plainTextToken;
+            $success['name'] = $user->name;
 
-        $response = [
-            'success' => true,
-            'data' => $success,
-            'message' =>"User register successfully."
-        ];
+            $response = [
+                'success' => true,
+                'data' => $success,
+                'message' =>"User register successfully."
+            ];
 
-        return response()->json($response,200);
+            return response()->json($response,200);
+        }
+
+
     }
 
 }
