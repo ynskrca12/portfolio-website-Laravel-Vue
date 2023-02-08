@@ -20,6 +20,7 @@ onMounted(async() => {
 const getAbout = async () => {
     let response = await axios.get("/api/edit_about")
     form.value = response.data
+    console.log('form',form.value)
 }
 
 const getPhoto = () => {
@@ -37,7 +38,7 @@ const getPhoto = () => {
 const changePhoto = (e) => {
     let file = e.target.files[0];
     let reader = new FileReader();
-    let limit =1024*1024*2
+    let limit = 1024*1024*2
     if(file['size'] > limit){
         swal({
             icon:'error',
@@ -83,10 +84,10 @@ await axios.post(`/api/update_about/${form.value.id}`,form.value)
 </script>
 
 <template>
-    <Base/>
+    <Base />
     <main class="main">
             <div class="main__sideNav"></div>
-
+            <!-- Main Content -->
             <div class="main__content">
                  <!--==================== ABOUT ====================-->
             <section class="about section" id="about">

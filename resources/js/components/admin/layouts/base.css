@@ -460,6 +460,62 @@
     padding: 10px;
 
   }
+
+  /*==================== Table ====================*/
+  .titlebar {
+    display:flex;
+    justify-content:space-between;
+    align-items: center;
+  }
+
+  .titlebar_item,h1,button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .btn {
+    border:1px solid #6a727a;
+    padding: 9px 15px;
+    border-radius: 4px;
+    background: #FFF;
+    color: black;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background: #f1f1f1;
+    color:#6a727a;
+  }
+
+  .overview_table-header {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 50px 1fr ;
+    color: #6a727a;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #e0e0e0;
+    padding-left:30px;
+    padding-right: 30px;
+    padding-top: 20px;
+    padding-bottom: 1.2rem;
+    margin-top: 20px;
+    background-color: #FFF;
+
+  }
+
+  .overview_table-items {
+    padding: 10px 30px !important;
+    gap: 10px;
+    display: grid;
+    grid-template-columns: 50px 1fr ;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    color: #6a727a;
+    background-color: #FFF;
+
+  }
+
+  /*==================== End overview Table ====================*/
+
   /*==================== BUTTONS ====================*/
   .btn {
     border:1px solid #6a727a;

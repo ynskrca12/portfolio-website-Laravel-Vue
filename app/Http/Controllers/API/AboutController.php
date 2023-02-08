@@ -11,7 +11,7 @@ use Intervention\Image\Facades\Image;
 class AboutController extends Controller
 {
     public function edit_about() {
-        return About::ordery('id','desc')->first();
+        return About::orderBy('id','desc')->first();
     }
 
     public function update_about(Request $request, $id) {
