@@ -42,5 +42,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(ServiceController::class)->group(function(){
     Route::get('get_all_service','get_all_service');
-    Route::post('create_service','create_service');
+    Route::post('/create_service','create_service');
+    Route::post('/update_service/{id}','update_service');
+    Route::get('/delete_service/{id}','delete_service');
 });
