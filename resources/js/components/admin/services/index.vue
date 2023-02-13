@@ -23,7 +23,7 @@
 
     const openModal = () => {
         showModal.value = !showModal.value
-
+        editModal.value = true
     }
 
     const closeModal = () => {
@@ -192,8 +192,8 @@
                                 <button class="btn mr-2 btn__close--modal" @click="closeModal()">
                                     Cancel
                                 </button>
-                                <button class="btn btn-secondary" v-show="editModal == false">Save</button>
-                                <button class="btn btn-secondary" v-show="editModal == true">Update</button>
+                                <button class="btn btn-secondary"  >Save</button>
+                                <button class="btn btn-secondary" >Update</button>
                             </div>
                     </form>
                     </div>
