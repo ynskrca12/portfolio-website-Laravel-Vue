@@ -1,17 +1,51 @@
 <script setup>
 import Base from '../layouts/base.vue'
-import { onMounted,ref } from 'vue';
+import { onMounted,ref, toDisplayString } from 'vue';
 
 
 let skills = ref([])
+let services = ref([])
+const showModal = ref(false)
+const hideModal = ref(true)
+let form = ref({
+    name:'',
+    proficiency:'',
+    service_id:''
+})
 
 onMounted(async () => {
     getSkills()
+    getServices()
 })
 
 const getSkills = async () => {
     let response = await axios.get('/api/get_all_skill')
     skills.value = response.data.skills
+}
+
+const getServices = async() => {
+    let response = await axios.get('/api/get_all_service')
+    services.value = response.data.services
+}
+
+const openModal = () => {
+    showModal.value = !showModal.value
+}
+
+const closeModal = () => {
+    showModal.value = !hideModal.value
+}
+
+const createSkill = async() => {
+    await axios.post('/api/create_skill',form.value)
+    .then(response => {
+        getSkills()
+        closeModal()
+        toast.fire({
+            icon:'success',
+            title:'Skill add successfully'
+        })
+    })
 }
 
 </script>
@@ -30,7 +64,7 @@ const getSkills = async () => {
                             <h1>Skills </h1>
                         </div>
                         <div class="titlebar_item">
-                            <div class="btn btn__open--modal">
+                            <div class="btn" @click="openModal()">
                                 New Skill
                             </div>
                         </div>
@@ -93,34 +127,38 @@ const getSkills = async () => {
 
                 </div>
                 <!-------------- SERVICES MODAL --------------->
-                <div class="modal main__modal " >
+                <div class="modal main__modal " :class="{show:showModal}">
                     <div class="modal__content">
-                        <span class="modal__close btn__close--modal" >×</span>
+                        <span class="modal__close btn__close--modal" @click="closeModal()">×</span>
                         <h3 class="modal__title">Add Skill</h3>
                         <hr class="modal_line"><br>
-                        <div>
-                            <p>Name</p>
-                            <input type="text" class="input" />
+                        <form @submit.prevent="createSkill()">
+                            <div>
+                                <p>Name</p>
+                                <input type="text" class="input" v-model="form.name"/>
 
-                            <p>Proficiency</p>
-                            <input type="text" class="input" />
+                                <p>Proficiency</p>
+                                <input type="text" class="input" v-model="form.proficiency" />
 
-                            <p>Service</p>
-                            <select class="inputSelect" name="" id="">
-                                <option value="">Front-end developer</option>
-                                <option value="">Backend developer</option>
-                            </select>
-                        </div>
-                        <br><hr class="modal_line">
-                        <div class="model__footer">
-                            <button class="btn mr-2 btn__close--modal" @click="closeModal()">
-                                Cancel
-                            </button>
-                            <button class="btn btn-secondary btn__close--modal ">Save</button>
-                        </div>
+                                <p>Service</p>
+                                <select class="inputSelect" name="" id="" v-model="form.service_id">
+                                    <option disabled>Select service</option>
+                                    <option :value="service.id" v-for="service in services" :key="service.id">
+                                    {{ service.name }}
+                                    </option>
+                                </select>
+                            </div>
+                            <br><hr class="modal_line">
+                            <div class="model__footer">
+                                <button class="btn mr-2 btn__close--modal" @click="closeModal()">
+                                    Cancel
+                                </button>
+                                <button class="btn btn-secondary btn__close--modal ">Save</button>
+                            </div>
+                    </form>
                     </div>
                 </div>
             </section>
-            </div>s
+            </div>
 </main>
 </template>
