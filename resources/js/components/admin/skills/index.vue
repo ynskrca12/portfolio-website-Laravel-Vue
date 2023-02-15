@@ -7,6 +7,7 @@ let skills = ref([])
 let services = ref([])
 const showModal = ref(false)
 const hideModal = ref(true)
+//const editModal = ref(false)
 let form = ref({
     name:'',
     proficiency:'',
@@ -34,6 +35,8 @@ const openModal = () => {
 
 const closeModal = () => {
     showModal.value = !hideModal.value
+    form.value = ({})
+    //editModal.value=false
 }
 
 const createSkill = async() => {
@@ -47,6 +50,50 @@ const createSkill = async() => {
         })
     })
 }
+
+const editModal = (item) => {
+    editModal.value = true
+    showModal.value = !showModal.value
+    form.value = item
+}
+
+const updateSkill = async () => {
+    await axios.post('/api/update_skill/'+form.value.id, form.value)
+    .then(() => {
+        getSkills()
+        closeModal()
+        toast.fire({
+            icon:"success",
+            title:"Skill update successfully"
+        })
+    })
+}
+
+const deleteSkill = (id) => {
+    Swal.fire({
+        title:'Are you sure ?',
+        text: "You can't go back",
+        icon: 'warning',
+        showCancelButton:true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it !'
+    })
+    .then((result) => {
+        if(result.value){
+            axios.get('/api/delete_skill/'+id)
+            .then(()=>{
+                Swal.fire(
+                    'Delete',
+                    'Skill delete successfully',
+                    'success'
+                )
+                getSkills()
+            })
+        }
+    })
+}
+
 
 </script>
 
@@ -114,10 +161,10 @@ const createSkill = async() => {
                             </div>
                             <p v-if="item.service">{{ item.service.name }}</p>
                             <div>
-                                <button class="btn-icon success">
+                                <button class="btn-icon success" @click="editModal(item)">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
-                                <button class="btn-icon danger" >
+                                <button class="btn-icon danger" @click="deleteSkill(item.id)">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -130,7 +177,10 @@ const createSkill = async() => {
                 <div class="modal main__modal " :class="{show:showModal}">
                     <div class="modal__content">
                         <span class="modal__close btn__close--modal" @click="closeModal()">×</span>
-                        <h3 class="modal__title">Add Skill</h3>
+                        <!-- <h3 class="modal__title" v-show="editModal == false">Add Skill</h3>
+                        <h3 class="modal__title" v-show="editModal == true">Update Skill</h3> -->
+                        <h3 class="modal__title" >Add Skill</h3>
+                        <h3 class="modal__title" >Update Skill</h3>
                         <hr class="modal_line"><br>
                         <form @submit.prevent="createSkill()">
                             <div>
@@ -153,7 +203,18 @@ const createSkill = async() => {
                                 <button class="btn mr-2 btn__close--modal" @click="closeModal()">
                                     Cancel
                                 </button>
-                                <button class="btn btn-secondary btn__close--modal ">Save</button>
+                                <!-- <button class="btn btn-secondary btn__close--modal " v-show="editModal ==false">
+                                    Save
+                                </button>
+                                <button class="btn btn-secondary btn__close--modal " v-show="editModal ==true">
+                                    Update
+                                </button> -->
+                                <button class="btn btn-secondary btn__close--modal " >
+                                    Save
+                                </button>
+                                <button class="btn btn-secondary btn__close--modal " >
+                                    Update
+                                </button>
                             </div>
                     </form>
                     </div>
