@@ -6,6 +6,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\AboutController;
 use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\SkillController;
+use App\Http\Controllers\API\EducationController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -35,4 +36,9 @@ Route::controller(SkillController::class)->group(function(){
     Route::post('/create_skill','create_skill');
     Route::post('/update_skill/{id}','update_skill');
     Route::get('/delete_skill/{id}','delete_skill');
+});
+
+Route::controller(EducationController::class)->group(function(){
+    Route::get('/get_all_education','get_all_education');
+
 });
