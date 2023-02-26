@@ -14,7 +14,19 @@ class EducationController extends Controller
         $educations = Education::orderBy('id','DESC')->get();
 
         return response()->json([
-            'education' => $educations
+            'educations' => $educations
         ],200);
+    }
+
+    public function create_education(Request $request){
+        $this->validate($request,[
+            'institution' => 'required'
+        ]);
+        $education = new Education();
+        $education->institution = $request->institution;
+        $education->period = $request->period;
+        $education->degree = $request->degree;
+        $education->department = $request->department;
+        $education->save();
     }
 }
