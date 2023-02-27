@@ -48,4 +48,5 @@ Route::controller(EducationController::class)->group(function(){
 
 Route::controller(ExperienceController::class)->group(function(){
     Route::get('/get_all_experience','get_all_experience');
+    Route::post('/create_experience','create_experience');
 });
