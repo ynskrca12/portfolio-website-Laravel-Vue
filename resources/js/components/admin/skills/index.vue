@@ -1,6 +1,6 @@
 <script setup>
 import Base from '../layouts/base.vue'
-import { onMounted,ref, toDisplayString } from 'vue';
+import { onMounted,ref } from 'vue';
 
 
 let skills = ref([])

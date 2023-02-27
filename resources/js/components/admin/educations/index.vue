@@ -5,6 +5,7 @@
     let educations = ref([])
     const showModal = ref(false)
     const hideModal = ref(true)
+    const editMode = ref(false)
 
     let form = ref({
         institution:'',
@@ -21,7 +22,6 @@
 
     const getEducations = async () => {
         let response = await axios.get('/api/get_all_education')
-        //console.log('response',response)
         educations.value = response.data.educations
     }
 
@@ -31,6 +31,8 @@
 
     const closeModal = () => {
         showModal.value = !hideModal.value
+        form.value=({})
+        editMode.value=false
     }
 
     const createEducation = async () => {
@@ -44,6 +46,50 @@
             })
         })
     }
+
+
+    const editModal = (item) => {
+        editMode.value=true
+        showModal.value = !showModal.value
+        form.value = item
+    }
+
+    const updateEducation = async () => {
+        await axios.post('/api/update_education/'+form.value.id,form.value)
+        .then(() => {
+            getEducations()
+            closeModal
+            toast.fire({
+                icon:"success",
+                title:"Education update successfully"
+            })
+        })
+    }
+
+    const deleteEducation = (id) => {
+    Swal.fire({
+        title:'Are you sure ?',
+        text: "You can't go back",
+        icon: 'warning',
+        showCancelButton:true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it !'
+    })
+    .then((result) => {
+        if(result.value){
+            axios.get('/api/delete_education/'+id)
+            .then(()=>{
+                Swal.fire(
+                    'Delete',
+                    'Education delete successfully',
+                    'success'
+                )
+                getEducations()
+            })
+        }
+    })
+}
 
 </script>
 
@@ -110,10 +156,10 @@
                                 <p>{{item.degree}}</p>
                                 <p>{{item.department}}</p>
                             <div>
-                                <button class="btn-icon success">
+                                <button class="btn-icon success" @click="editModal(item)">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
-                                <button class="btn-icon danger" >
+                                <button class="btn-icon danger" @click="deleteEducation(item.id)">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -126,9 +172,10 @@
                 <div class="modal main__modal " :class="{show:showModal}">
                     <div class="modal__content">
                         <span class="modal__close" @click="closeModal()" >×</span>
-                        <h3 class="modal__title">Add Education</h3>
+                        <h3 class="modal__title" v-show="editMode == false">Add Education</h3>
+                        <h3 class="modal__title" v-show="editMode == true">Update Education</h3>
                         <hr class="modal_line"><br>
-                    <form @submit.prevent="createEducation()">
+                    <form @submit.prevent="editMode ? updateEducation() : createEducation()">
                         <div>
                             <p>Institution</p>
                             <input type="text" class="input" v-model="form.institution" />
@@ -146,10 +193,15 @@
 
                         <br><hr class="modal_line">
                         <div class="model__footer">
-                            <button class="btn mr-2 btn__close--modal" @click="closeModal()">
+                            <button class="btn mr-2 " @click="closeModal()">
                                 Cancel
                             </button>
-                            <button class="btn btn-secondary btn__close--modal ">Save</button>
+                            <button class="btn btn-secondary " v-show="editMode==false">
+                                Save
+                            </button>
+                            <button class="btn btn-secondary " v-show="editMode==true">
+                                Update
+                            </button>
                         </div>
                     </form>
                     </div>
