@@ -5,6 +5,7 @@ import {onMounted,ref} from 'vue'
 let experiences = ref([])
 const showModal = ref(false)
 const hideModal = ref(true)
+const editMode = ref(false)
 let form = ref({
     company:'',
     period:'',
@@ -26,6 +27,8 @@ const openModal = () => {
 
 const closeModal = () => {
     showModal.value = !hideModal.value
+    form.value = ({})
+    editMode.value=false
 }
 
 const createExperience = async () => {
@@ -37,6 +40,49 @@ const createExperience = async () => {
             icon:"success",
             title:'Experience add successfully'
         })
+    })
+}
+
+const editExperience = (item) => {
+    editMode.value=true
+    showModal.value=!showModal.value
+    form.value=item
+}
+
+const updateExperience = async () => {
+    await axios.post('/api/update_experience/'+form.value.id,form.value)
+    .then(() => {
+        getExperiences()
+        closeModal()
+        toast.fire({
+            icon:"success",
+            title:"Experience update success"
+        })
+    })
+}
+
+const deleteExperience = (id) => {
+    Swal.fire({
+        title:'Are you sure ?',
+        text: "You can't go back",
+        icon: 'warning',
+        showCancelButton:true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it !'
+    })
+    .then((result) => {
+        if(result.value){
+            axios.get('/api/delete_experience/'+id)
+            .then(()=>{
+                Swal.fire(
+                    'Delete',
+                    'Experience delete successfully',
+                    'success'
+                )
+                getExperiences()
+            })
+        }
     })
 }
 
@@ -103,10 +149,10 @@ const createExperience = async () => {
                             <p>{{ item.period }}</p>
                             <p>{{ item.position }} </p>
                             <div>
-                                <button class="btn-icon success">
+                                <button class="btn-icon success" @click="editExperience(item)">
                                     <i class="fas fa-pencil-alt"></i>
                                 </button>
-                                <button class="btn-icon danger" >
+                                <button class="btn-icon danger" @click="deleteExperience(item.id)">
                                     <i class="far fa-trash-alt"></i>
                                 </button>
                             </div>
@@ -119,9 +165,10 @@ const createExperience = async () => {
                 <div class="modal main__modal " :class="{show:showModal}">
                     <div class="modal__content">
                         <span class="modal__close btn__close--modal" @click="closeModal()">×</span>
-                        <h3 class="modal__title">Add Experience</h3>
+                        <h3 class="modal__title" v-show="editMode == false">Add Experience</h3>
+                        <h3 class="modal__title" v-show="editMode == true">Update Experience</h3>
                         <hr class="modal_line"><br>
-                        <form @submit.prevent="createExperience()">
+                        <form @submit.prevent="editMode ? updateExperience() : createExperience()">
                             <div>
                                 <p>Company</p>
                                 <input type="text" class="input" v-model="form.company" />
@@ -138,7 +185,12 @@ const createExperience = async () => {
                                 <button class="btn mr-2 btn__close--modal" @click="closeModal()">
                                     Cancel
                                 </button>
-                                <button class="btn btn-secondary btn__close--modal ">Save</button>
+                                <button class="btn btn-secondary" v-show="editMode == false">
+                                    Save
+                                </button>
+                                <button class="btn btn-secondary" v-show="editMode == true">
+                                    Update
+                                </button>
                             </div>
                     </form>
                     </div>
