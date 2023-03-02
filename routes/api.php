@@ -8,6 +8,7 @@ use App\Http\Controllers\API\ServiceController;
 use App\Http\Controllers\API\SkillController;
 use App\Http\Controllers\API\EducationController;
 use App\Http\Controllers\API\ExperienceController;
+use App\Http\Controllers\API\ProjectController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -52,3 +53,9 @@ Route::controller(ExperienceController::class)->group(function(){
     Route::post('/update_experience/{id}','update_experience');
     Route::get('/delete_experience/{id}','delete_experience');
 });
+
+Route::controller(ProjectController::class)->group(function(){
+    Route::get('/get_all_project','get_all_project');
+
+});
+
