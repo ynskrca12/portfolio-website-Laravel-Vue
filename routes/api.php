@@ -56,6 +56,6 @@ Route::controller(ExperienceController::class)->group(function(){
 
 Route::controller(ProjectController::class)->group(function(){
     Route::get('/get_all_project','get_all_project');
-
+    Route::post('/add_project','add_project');
 });
 

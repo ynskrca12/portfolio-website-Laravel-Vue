@@ -1,6 +1,9 @@
 <script setup>
 import Base from '../layouts/base.vue'
 import { onMounted,ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router =useRouter()
 
 let projects = ref([])
 
@@ -15,6 +18,10 @@ const getProjects = async () => {
 
 const ourImage = (img) => {
     return "/img/upload/"+img
+}
+
+const newProject = () => {
+    router.push('/admin/projects/new')
 }
 
 
@@ -34,7 +41,7 @@ const ourImage = (img) => {
                             <h1>Projects </h1>
                         </div>
                         <div class="titlebar_item">
-                            <div class="btn btn__open--modal">
+                            <div class="btn btn__open--modal" @click="newProject()">
                                 New Project
                             </div>
                         </div>
